@@ -390,6 +390,24 @@ int DllExport GetCurrentDesktopNumber() {
 	return number;
 }
 
+IVirtualDesktop* CreateNewDesktop() {
+	_RegisterService();
+
+	if (pDesktopManagerInternal == nullptr) {
+		return nullptr;
+	}
+	IVirtualDesktop* found = nullptr;
+	pDesktopManagerInternal->CreateDesktopW(&found);
+	return found;
+}
+
+int DllExport GetNewDesktop() {
+	IVirtualDesktop* virtualDesktop = CreateNewDesktop();
+	int number = GetDesktopNumber(virtualDesktop);
+	virtualDesktop->Release();
+	return number;
+}
+
 void DllExport GoToDesktopNumber(int number) {
 	_RegisterService();
 
